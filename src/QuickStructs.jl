@@ -2,20 +2,23 @@ module QuickStructs
 
 
 export CircularBuffer,
+			 RollingWindow,
+			 SLLNode,
+			 SinglyLinkedList,
+			 DLLNode,
+			 DoublyLinkedList,
+
 			 capacity,
 			 isfull,
 			 toarray,
-
-			 RollingWindow,
-
-			 DLLNode,
-			 DoublyLinkedList,
 			 head,
 			 tail,
 			 peek,
+			 insertBefore!,
+			 insertAfter!,
+			 insertSorted!,
+			 moveToEnd!
 
-			 SLLNode,
-			 SinglyLinkedList
 
 typealias IntIterable Union(Vector{Int}, StepRange{Int,Int}, UnitRange{Int})
 

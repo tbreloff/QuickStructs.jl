@@ -140,7 +140,7 @@ function Base.shift!{T}(l::SinglyLinkedList{T})
 	l.n -= 1
 	firstnode.data
 end
-getfirst!{T}(l::SinglyLinkedList{T}) = shift!(l)
+# getfirst!{T}(l::SinglyLinkedList{T}) = shift!(l)
 
 # # add to front or back and return the node
 Base.unshift!{T}(l::SinglyLinkedList{T}, newnode::SLLNode{T}) = insertAfter!(l, l.headnode, newnode)
@@ -168,3 +168,6 @@ function Base.show{T}(io::IO, l::SinglyLinkedList{T})
 	print(io, "SinglyLinkedList(n=$(l.n))")
 	print(io, l)
 end
+
+
+toarray{T}(l::SinglyLinkedList{T}) = T[node.data for node in l]

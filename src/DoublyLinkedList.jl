@@ -222,3 +222,6 @@ function Base.show{T}(io::IO, l::DoublyLinkedList{T})
 	print(io, "DoublyLinkedList(n=$(l.n))")
 	print(io, l)
 end
+
+
+toarray{T}(l::DoublyLinkedList{T}) = T[node.data for node in l]
