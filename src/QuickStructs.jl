@@ -17,6 +17,7 @@ export CircularBuffer,
 			 SLLNode,
 			 SinglyLinkedList
 
+typealias IntIterable Union(Vector{Int}, StepRange{Int,Int}, UnitRange{Int})
 
 include("CircularBuffer.jl")
 include("RollingWindow.jl")

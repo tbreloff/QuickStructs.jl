@@ -12,6 +12,19 @@ type CircularBuffer{T}
 end
 CircularBuffer{T}(::Type{T}, capacity::Int) = CircularBuffer{T}(T, capacity)
 
+
+function Base.print{T}(io::IO, cb::CircularBuffer{T})
+	print(io, "{")
+	print(io, join(collect(cb), ", "))
+	print(io, "}")
+end
+
+function Base.show{T}(io::IO, cb::CircularBuffer{T})
+	print(io, "CircularBuffer(cap=$(cb.capacity) start=$(cb.startIdx) n=$(length(cb)))")
+	print(io, cb)
+end
+
+
 # cap = 8
 # n = 6
 # start = 6
@@ -78,18 +91,7 @@ Base.isempty(cb::CircularBuffer) = length(cb) == 0
 
 capacity(cb::CircularBuffer) = cb.capacity
 isfull(cb::CircularBuffer) = length(cb) == cb.capacity
+toarray(cb::CircularBuffer) = copy(cb.buffer)
 
 Base.first(cb::CircularBuffer) = cb[1]
 Base.last(cb::CircularBuffer) = cb[length(cb)]
-
-
-function Base.print{T}(io::IO, cb::CircularBuffer{T})
-	print(io, "{")
-	print(io, join(collect(cb), ", "))
-	print(io, "}")
-end
-
-function Base.show{T}(io::IO, cb::CircularBuffer{T})
-	print(io, "CircularBuffer(cap=$(cb.capacity) start=$(cb.startIdx) n=$(length(cb)))")
-	print(io, cb)
-end
