@@ -10,7 +10,25 @@ type CircularBuffer{T}
 
 	CircularBuffer{T}(::Type{T}, capacity::Int) = new(capacity, 1, T[])
 end
+
 CircularBuffer{T}(::Type{T}, capacity::Int) = CircularBuffer{T}(T, capacity)
+
+function CircularBuffer{T}(::Type{T}, capacity::Int, fillval::T)
+	cb = CircularBuffer(T, capacity)
+	for i in 1:capacity
+		push!(cb, copy(fillval))
+	end
+	cb
+end
+
+function CircularBuffer{T}(::Type{T}, capacity::Int, v::Vector{T})
+	cb = CircularBuffer(T, capacity)
+	for x in v
+		push!(cb, copy(x))
+	end
+	cb
+end
+
 
 
 function Base.print{T}(io::IO, cb::CircularBuffer{T})
