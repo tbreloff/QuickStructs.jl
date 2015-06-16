@@ -1,24 +1,24 @@
 
 
 type RollingWindow{T}
-	cb::CircularBuffer{T}
-	lags::IntIterable
+  cb::CircularBuffer{T}
+  lags::IntIterable
 end
 
 function RollingWindow{T}(::Type{T}, lags::IntIterable)
-	minlag = minimum(lags)
-	@assert minlag >= 0
-	maxlag = maximum(lags)
-	@assert maxlag >= minlag
-	RollingWindow{T}(CircularBuffer(T, maxlag+1), lags)
+  minlag = minimum(lags)
+  @assert minlag >= 0
+  maxlag = maximum(lags)
+  @assert maxlag >= minlag
+  RollingWindow{T}(CircularBuffer(T, maxlag+1), lags)
 end
 
 function Base.print(io::IO, window::RollingWindow)
-	println(io, "RollingWindow{n=", length(window), (isfull(window) ? "" : " cap=$(capacity(window))"), " cb:")
-	for item in window
-		println(io, "  ", item)
-	end
-	print(io, "}")
+  println(io, "RollingWindow{n=", length(window), (isfull(window) ? "" : " cap=$(capacity(window))"), " cb:")
+  for item in window
+    println(io, "  ", item)
+  end
+  print(io, "}")
 end
 Base.show(io::IO, window::RollingWindow) = print(io, window)
 
@@ -27,28 +27,28 @@ isfull(window::RollingWindow) = isfull(window.cb)
 
 
 function toarray{T}(window::RollingWindow{T})
-	# if !isfull(window)
-	# 	error("Window must be full to convert to a vector: $window")
-	# end
+  # if !isfull(window)
+  #   error("Window must be full to convert to a vector: $window")
+  # end
 
-	# T[window.cb[end - lagIdx] for lagIdx in window.lags]
-	window[1:length(window)]
+  # T[window.cb[end - lagIdx] for lagIdx in window.lags]
+  window[1:length(window)]
 end
 
 #----------------------
 
 function bufferIndex(window::RollingWindow, i::Int)
-	if i < 1 || i > length(window)
-		error("RollingWindow out of range. window=$window i=$i")
-	end
-	length(window.cb) - window.lags[i]
+  if i < 1 || i > length(window)
+    error("RollingWindow out of range. window=$window i=$i")
+  end
+  length(window.cb) - window.lags[i]
 end
 
 Base.getindex(window::RollingWindow, i::Int) = window.cb[bufferIndex(window, i)]
 Base.getindex{T}(window::RollingWindow{T}, itr::IntIterable) = T[window[i] for i in itr]
 function Base.setindex!{T}(window::RollingWindow, data::T, i::Int)
-	window.cb[bufferIndex(window, i)] = data
-	nothing
+  window.cb[bufferIndex(window, i)] = data
+  nothing
 end
 
 
