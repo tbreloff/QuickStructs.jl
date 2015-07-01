@@ -20,7 +20,8 @@ export CircularBuffer,
        moveToEnd!
 
 
-typealias IntIterable Union(Vector{Int}, StepRange{Int,Int}, UnitRange{Int})
+# typealias IntIterable Union(Vector{Int}, StepRange{Int,Int}, UnitRange{Int})
+typealias IntIterable AbstractVector{Int}
 
 include("CircularBuffer.jl")
 include("RollingWindow.jl")

@@ -3,7 +3,7 @@
 # overwriting values in a circular fashion
 # iterating occurs from the "start" until the "end", and will return "length(buffer)" nodes
 
-type CircularBuffer{T}
+type CircularBuffer{T} <: AbstractVector{T}
   capacity::Int
   startIdx::Int
   buffer::Vector{T}
@@ -66,13 +66,13 @@ function bufferIndex(cb::CircularBuffer, i::Int)
 end
 
 Base.getindex(cb::CircularBuffer, i::Int) = cb.buffer[bufferIndex(cb, i)]
-Base.getindex{T}(cb::CircularBuffer{T}, itr::IntIterable) = T[cb[i] for i in itr]
+# Base.getindex{T}(cb::CircularBuffer{T}, itr::IntIterable) = T[cb[i] for i in itr]
 function Base.setindex!{T}(cb::CircularBuffer, data::T, i::Int)
   cb.buffer[bufferIndex(cb, i)] = data
   nothing
 end
 
-Base.endof(cb::CircularBuffer) = length(cb)
+# Base.endof(cb::CircularBuffer) = length(cb)
 
 # Note: iterating like "for x in X; (do something); end" translates to:
 # state = start(X)
@@ -81,14 +81,14 @@ Base.endof(cb::CircularBuffer) = length(cb)
 #   (do something)
 # end
 
-# iterate with the syntax "for x in list"
-Base.start{T}(cb::CircularBuffer{T}) = 1
-Base.done{T}(cb::CircularBuffer{T}, state::Int) = state > length(cb)
-Base.next{T}(cb::CircularBuffer{T}, state::Int) = (cb.buffer[bufferIndex(cb, state)], state+1)
+# # iterate with the syntax "for x in list"
+# Base.start{T}(cb::CircularBuffer{T}) = 1
+# Base.done{T}(cb::CircularBuffer{T}, state::Int) = state > length(cb)
+# Base.next{T}(cb::CircularBuffer{T}, state::Int) = (cb.buffer[bufferIndex(cb, state)], state+1)
 
 
 
-# add to front or back and return the node
+# add to back and return the node
 function Base.push!{T}(cb::CircularBuffer{T}, data::T)
 
   if length(cb) == cb.capacity
@@ -104,12 +104,19 @@ function Base.push!{T}(cb::CircularBuffer{T}, data::T)
   end
 end
 
+function Base.append!{T}(cb::CircularBuffer{T}, datavec::AbstractVector{T})
+  for d in datavec
+    push!(cb, d)
+  end
+end
+
 Base.length(cb::CircularBuffer) = length(cb.buffer)
-Base.isempty(cb::CircularBuffer) = length(cb) == 0
+# Base.isempty(cb::CircularBuffer) = length(cb) == 0
+Base.size(cb::CircularBuffer) = (length(cb),)
 
 capacity(cb::CircularBuffer) = cb.capacity
 isfull(cb::CircularBuffer) = length(cb) == cb.capacity
-toarray(cb::CircularBuffer) = copy(cb.buffer)
+toarray{T}(cb::CircularBuffer{T}) = T[copy(x) for x in cb]
 
-Base.first(cb::CircularBuffer) = cb[1]
-Base.last(cb::CircularBuffer) = cb[length(cb)]
+# Base.first(cb::CircularBuffer) = cb[1]
+# Base.last(cb::CircularBuffer) = cb[length(cb)]
