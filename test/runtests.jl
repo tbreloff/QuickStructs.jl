@@ -50,3 +50,5 @@ facts("RollingWindow") do
   @fact w[[1,3]] => Int[8,4]
 
 end
+
+FactCheck.exitstatus()
